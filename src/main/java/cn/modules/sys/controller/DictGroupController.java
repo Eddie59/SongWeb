@@ -5,14 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * DictController class
+ * DictGroupController class
  *
  * @author Administrator
  * @date
  */
 @Controller
-@RequestMapping("${admin.url.prefix}/sys/dict")
-public class DictController extends BaseController {
+@RequestMapping("${admin.url.prefix}/sys/dictgroup")
+public class DictGroupController extends BaseController {
 
     @RequestMapping("/index")
     public String index() {
