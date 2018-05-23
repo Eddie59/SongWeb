@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.modules.sys.mapper.DictMapper">
-    <sql id="column_list">
-    d.id,
-    d.gid,
-    d.label,
-    d.value,
-    d.sort,
-    d.remarks,
-    g.code
-   </sql>
-
-    <resultMap id="baseResultMap" type="Dict">
-        <id column="id" property="id" jdbcType="VARCHAR"/>
-        <result column="gid" property="gid" jdbcType="VARCHAR"/>
-        <result column="label" property="label" jdbcType="VARCHAR"/>
-        <result column="value" property="value" jdbcType="VARCHAR"/>
-        <result column="sort" property="sort" jdbcType="INTEGER"/>
-        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
-        <result column="code" property="code" jdbcType="VARCHAR"/>
+    <resultMap id="BaseResultMap" type="Dict" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="gid" property="gid" jdbcType="VARCHAR" />
+        <result column="label" property="label" jdbcType="VARCHAR" />
+        <result column="value" property="value" jdbcType="VARCHAR" />
+        <result column="sort" property="sort" jdbcType="INTEGER" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
     </resultMap>
-
-    <select id="selectDictList" resultType="baseResultMap">
-        SELECT
-        <include refid="column_id"/>
-        from sys_dict d LEFT JOIN sys_dict_group g on d.gid=g.id
-        ORDER BY sort asc
+    <sql id="Base_Column_List" >
+        d.id,
+        d.gid,
+        d.label,
+        d.value,
+        d.sort,
+        d.remarks,
+        g.code
+    </sql>
+    <select id="selectDictList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from sys_dict d
+        LEFT JOIN sys_dict_group g on d.gid=g.id ORDER BY sort asc
     </select>
 
 </mapper>
