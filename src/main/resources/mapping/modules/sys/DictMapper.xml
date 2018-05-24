@@ -23,7 +23,7 @@
         select
         <include refid="Base_Column_List" />
         from sys_dict d
-        LEFT JOIN sys_dict_group g on d.gid=g.id ORDER BY sort asc
+        LEFT JOIN sys_dict_group g on d.gid=g.id
     </select>
 
 </mapper>

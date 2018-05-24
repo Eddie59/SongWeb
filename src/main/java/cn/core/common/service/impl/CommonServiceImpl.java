@@ -2,6 +2,7 @@ package cn.core.common.service.impl;
 
 import cn.core.common.service.ICommonService;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.*;
 
 import java.util.List;
@@ -17,7 +18,8 @@ public class CommonServiceImpl<M extends BaseMapper<T>, T>
         implements ICommonService<T> {
 
     @Override
-    public List<T> list() {
+    public List<T> listByPage(Page page) {
+
         return null;
     }
 

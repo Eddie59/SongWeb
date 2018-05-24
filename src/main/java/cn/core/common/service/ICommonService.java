@@ -1,5 +1,6 @@
 package cn.core.common.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.List;
@@ -12,6 +13,6 @@ import java.util.List;
  */
 public interface ICommonService<T> extends IService<T> {
 
-    List<T> list();
+    List<T> listByPage(Page page);
 
 }

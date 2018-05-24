@@ -2,6 +2,8 @@ package cn.modules.sys.service;
 
 import cn.core.common.service.ICommonService;
 import cn.modules.sys.entity.Dict;
+import com.baomidou.mybatisplus.plugins.Page;
+import javafx.scene.control.Pagination;
 
 import java.util.List;
 
@@ -13,5 +15,5 @@ import java.util.List;
  * @date
  */
 public interface IDictService extends ICommonService<Dict> {
-    List<Dict> selectDictList();
+    Page<Dict> selectDictList(Page page);
 }
