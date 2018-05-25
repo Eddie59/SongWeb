@@ -6,6 +6,7 @@ import cn.modules.sys.entity.Dict;
 import cn.modules.sys.service.IDictService;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * DictController class
@@ -23,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("${admin.url.prefix}/sys/dict")
-public class DictController extends BaseCRUDController<Dict,String> {
+public class DictController extends BaseCRUDController<Dict, String> {
 
     @RequestMapping("/index")
     public String index() {
@@ -33,20 +35,27 @@ public class DictController extends BaseCRUDController<Dict,String> {
     private IDictService service;
 
     @Autowired
-    public void setService(IDictService service)
-    {
-        this.service=service;
+    public void setService(IDictService service) {
+        this.service = service;
     }
 
     @RequestMapping(value = "/list2", method = RequestMethod.GET)
     public void list2(Model model, HttpServletRequest request, HttpServletResponse response) {
 
-        int rows =Integer.parseInt(request.getParameter("rows")) ;
-        int page =Integer.parseInt(request.getParameter("page")) ;
-        String sidx = request.getParameter("sidx");
-        String sord = request.getParameter("sord");
+        String test1=request.getParameter("test1");
+        String test2=request.getParameter("test2");
 
-        Page pageObj=new Page(page,rows);
+        int rows = Integer.parseInt(request.getParameter("page.size"));
+        int page = Integer.parseInt(request.getParameter("page.pn"));
+        String sort = request.getParameter("sort");
+        String order = request.getParameter("order");
+        boolean isAsc=true;
+        if(!StringUtils.equalsIgnoreCase(order,"asc"))
+        {
+            isAsc=false;
+        }
+
+        Page pageObj = new Page(page, rows,sort,isAsc);
         service.selectDictList(pageObj);
 
         String json = JSON.toJSONString(pageObj);

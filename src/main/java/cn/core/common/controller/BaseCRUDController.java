@@ -2,6 +2,7 @@ package cn.core.common.controller;
 
 import cn.core.common.entity.AbstractEntity;
 import cn.core.common.service.ICommonService;
+import cn.core.model.AjaxJson;
 import cn.core.utils.StringUtil;
 import cn.modules.sys.entity.Dict;
 import com.alibaba.fastjson.JSON;
@@ -9,10 +10,11 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
@@ -42,10 +44,8 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
         }
     }
 
-    public Entity get(ID id)
-    {
-        if(!ObjectUtils.isEmpty(id))
-        {
+    public Entity get(ID id) {
+        if (!ObjectUtils.isEmpty(id)) {
             return commonService.selectById(id);
         }
         return newModel();
@@ -81,7 +81,6 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
     }
 
 
-
     public void preEdit(Entity entity, Model model, HttpServletRequest request, HttpServletResponse response) {
 
     }
@@ -95,29 +94,28 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
         Entity obj = this.newModel();
         preEdit(obj, model, request, response);
 
-        if(!model.containsAttribute("data"))
-        {
-            model.addAttribute("data",obj);
+        if (!model.containsAttribute("data")) {
+            model.addAttribute("data", obj);
         }
 
         String createView = showCreate(newModel(), model, request, response);
-        if (StringUtils.isNoneEmpty(createView)) {
-            return createView;
+        if (!StringUtils.isEmpty(createView)) {
+            return display(createView);
         }
-
-        return display("create");
+        return display("edit");
     }
+
 
 
     public String showUpdate(Entity entity, Model model, HttpServletRequest request, HttpServletResponse response) {
         return "";
     }
-    @RequestMapping(value = "{id}/update",method = RequestMethod.GET)
-    public String _showUpdate(@PathVariable("id") ID id,Model model,HttpServletRequest request,HttpServletResponse response)
-    {
-        Entity instance=get(id);
-        preEdit(instance,model,request,response);
-        model.addAttribute("data",instance);
+
+    @RequestMapping(value = "{id}/update", method = RequestMethod.GET)
+    public String _showUpdate(@PathVariable("id") ID id, Model model, HttpServletRequest request, HttpServletResponse response) {
+        Entity instance = get(id);
+        preEdit(instance, model, request, response);
+        model.addAttribute("data", instance);
 
         String updateView = showUpdate(newModel(), model, request, response);
         if (!StringUtils.isEmpty(updateView)) {
@@ -127,6 +125,101 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
         return display("edit");
     }
 
+    /**
+     *
+     * 添加
+     */
+    @RequestMapping(value = "create", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxJson create(Model model, @Validated @ModelAttribute("data") Entity entity, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+        return doSave(entity,request,response,result);
+    }
+
+    /**
+     *
+     * 更新
+     */
+    @RequestMapping(value = "{id}/update",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxJson update(Model model,@Validated @RequestAttribute("data") Entity entity,BindingResult result,HttpServletRequest request,HttpServletResponse response)
+    {
+        return doSave(entity,request,response,result);
+    }
+
+    public void preSave(Entity entity, HttpServletRequest request, HttpServletResponse response) {
+    }
+
+    /**
+     * 添加、更新
+     */
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxJson doSave(Entity entity, HttpServletRequest request, HttpServletResponse response, BindingResult result) {
+        AjaxJson ajaxJson = new AjaxJson();
+        ajaxJson.success("保存成功");
+        if (hasError(entity, result)) {
+            String errorMsg = errorMsg(result);
+            if (StringUtils.isNoneEmpty(errorMsg)) {
+                ajaxJson.fail(errorMsg);
+            } else {
+                ajaxJson.fail("保存失败");
+            }
+            return ajaxJson;
+        }
+
+        try {
+            preSave(entity, request, response);
+            if (ObjectUtils.isEmpty(entity.getId())) {
+                commonService.insert(entity);
+            } else {
+                commonService.insertOrUpdate(entity);
+            }
+            afterSave(entity, request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ajaxJson.fail("保存失败!<br />原因:" + e.getMessage());
+        }
+        return ajaxJson;
+    }
+
+    public void afterSave(Entity entity, HttpServletRequest request, HttpServletResponse response) {
+    }
+
+
+
+
+    @RequestMapping(value = "{id}/delete",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxJson delete(@PathVariable ID id)
+    {
+        AjaxJson ajaxJson = new AjaxJson();
+        ajaxJson.success("删除成功");
+        try {
+            commonService.deleteById(id);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            ajaxJson.fail("删除失败");
+        }
+        return ajaxJson;
+    }
+
+
+    @RequestMapping(value = "batch/delete",method = RequestMethod.POST)
+    @ResponseBody
+    public AjaxJson batchDelete(@RequestParam(value = "ids",required = false) ID[] ids ) {
+        AjaxJson ajaxJson = new AjaxJson();
+        ajaxJson.success("删除成功");
+        try {
+            List<ID> idList= java.util.Arrays.asList(ids);
+            commonService.deleteBatchIds(idList);
+        } catch (Exception exp)
+        {
+            exp.printStackTrace();
+            ajaxJson.fail("删除失败");
+        }
+        return ajaxJson;
+    }
 
 
 }
