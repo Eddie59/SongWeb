@@ -1,108 +1,317 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/WEB-INF/webpage/taglibs.jspf" %>
+
 <html>
 <head>
-    <title>Title</title>
+    <title>dfsdf</title>
+    <meta name="decorator" content="theme"/>
 
-    <script type="text/javascript" src="/static/vendors/jquery/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/vendors/jqgrid/js/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="/static/vendors/jqgrid/js/i18n/grid.locale-cn.js"></script>
-    <script type="text/javascript" src="/static/common/js/curdtools_jqgrid.js"></script>
-    <script type="text/javascript" src="/static/vendors/layer/layer.min.js"></script>
-    <script type="text/javascript" src="/static/vendors/sweetalert/sweetalert.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="/static/vendors/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/vendors/jqgrid/css/ui.jqgrid-bootstrap-ui.css"/>
-
-
-    <script type="text/javascript">
-
-        function colFormat(value, options, row){
-            try{
-                if(!row.id) {
-                    return '';
-                }
-                var href="";
-                href +="<a href=\"#\" class=\"btn btn-xs btn-primary\" class=\"btn btn-xs \"";
-                href +="onclick=\"rowDialogDetailRefresh('添加字典','/admin/sys/dict/create?gid="+row.id+"','list','"+row.id+"','1000px','500px')\"";
-                href +="><i class=\"fa fa-plus\"></i>&nbsp添加字典</a>&nbsp&nbsp";
-
-                href +="<a href=\"#\" class=\"btn btn-xs btn-primary\" class=\"btn btn-xs \"";
-                href +="onclick=\"rowDialogDetailRefresh('修改字典','/admin/sys/dict/"+row.id+"/update','"+row.id+"','1000px','500px')\"";
-                href +="><i class=\"fa fa-plus\"></i>&nbsp修改字典</a>&nbsp&nbsp";
-
-                href +="<a href=\"#\" class=\"btn btn-xs btn-danger\" class=\"btn btn-xs \"";
-                href +="onclick=\"deleteRowData('删除','/admin/sys/dict/{id}/delete','"+row.id+"','list')\"";
-                href +="><i class=\"fa fa-trash\"></i>&nbsp删除</a>&nbsp&nbsp";
-                return href;
-            }catch(err){}
-            return value;
-        }
-        function colUnFormat(value, options, cellObject) {
-            try{
-                var html=cellObject.innerHTML;
-                var cellValue= $(html).attr("originalValue");
-                return cellValue;
-            }catch(err){}
-            return value;
-        }
-
-        $(function () {
-            $("#list").jqGrid({
-                url: '/admin/sys/dict/list2',
-                datatype: "json",
-                postData: {test1: "test1", test2: "test2"},//给后台传递参数
-                prmNames: {//请求参数格式预处理
-                    page: "page.pn",//传递的参数名由page改为page.pn
-                    rows: "page.size",
-                    sort: "sort",
-                    order: "order"
-                },
-                styleUI: 'Bootstrap',
-                caption: "JSON Example",
-                colNames: ['标签', '值', '排序', '备注'],
-                colModel: [
-                    {
-                        label: '标签',
-                        name: 'label',
-                        width: 100,
-                        align: 'left',
-                        sortable: true,
-                        checkbox: true,
-                        formatter: colFormat,//对列数据格式化
-                        unformat: colUnFormat
-                    },
-                    {label: '值', name: 'value', index: 'value'},
-                    {label: '排序', name: 'sort', index: 'sort'},
-                    {label: '备注', name: 'remarks', index: 'remarks'}
-                ],
-                height: 250,
-                rowNum: 5,
-                rowList: [5, 10, 20, 30],
-                pager: "#pager",
-                viewrecords: true,
-                jsonReader: {
-                    root: "records",    // json中代表实际模型数据的入口
-                    page: "current",    // json中代表当前页码的数据
-                    total: "pages",    // json中代表页码总数的数据
-                    records: "total", // json中代表数据行总数的数据
-                    repeatitems: true, //如果设为false，则jqGrid在解析json时，会根据name来搜索对应的数据元素（即可以json中元素可以不按顺序）；而所使用的name是来自于colModel中的name设定。
-                    cell: "cell",
-                    id: "id",
-                    userdata: "userdata",
-                },
-                multiSort: false,
-                sortable: true,
-                sortname: "id",
-                sortorder: "asc",
-            });
-            jQuery("#list").jqGrid('navGrid', '#pager2', {edit: true, add: true, del: true});
-        });
-    </script>
+    <link href="${staticPath}/css/plugins/jqGrid/ui.jqgrid.css" rel="stylesheet">
 
 </head>
 <body>
-<div id="wrapper"></div>
-<table id="list"></table>
-<div id="pager"></div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>jQuery Grid Plugin – jqGrid</h5>
+            </div>
+            <div class="ibox-content">
+                <h4>Basic example</h4>
+
+                <div class="jqGrid_wrapper">
+                    <table id="table_list_1"></table>
+                    <div id="pager_list_1"></div>
+                </div>
+
+                <h4>Advanced example</h4>
+                <p>
+
+                </p>
+
+                <div class="jqGrid_wrapper">
+                    <table id="table_list_2"></table>
+                    <div id="pager_list_2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- jqGrid -->
+<script src="${staticPath}/js/plugins/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="${staticPath}/js/plugins/jqGrid/jquery.jqGrid.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Examle data for jqGrid
+        var mydata = [
+            {id: "1", invdate: "2010-05-24", name: "test", note: "note", tax: "10.00", total: "2111.00"},
+            {id: "2", invdate: "2010-05-25", name: "test2", note: "note2", tax: "20.00", total: "320.00"},
+            {id: "3", invdate: "2007-09-01", name: "test3", note: "note3", tax: "30.00", total: "430.00"},
+            {id: "4", invdate: "2007-10-04", name: "test", note: "note", tax: "10.00", total: "210.00"},
+            {id: "5", invdate: "2007-10-05", name: "test2", note: "note2", tax: "20.00", total: "320.00"},
+            {id: "6", invdate: "2007-09-06", name: "test3", note: "note3", tax: "30.00", total: "430.00"},
+            {id: "7", invdate: "2007-10-04", name: "test", note: "note", tax: "10.00", total: "210.00"},
+            {
+                id: "8",
+                invdate: "2007-10-03",
+                name: "test2",
+                note: "note2",
+                amount: "300.00",
+                tax: "21.00",
+                total: "320.00"
+            },
+            {
+                id: "9",
+                invdate: "2007-09-01",
+                name: "test3",
+                note: "note3",
+                amount: "400.00",
+                tax: "30.00",
+                total: "430.00"
+            },
+            {
+                id: "11",
+                invdate: "2007-10-01",
+                name: "test",
+                note: "note",
+                amount: "200.00",
+                tax: "10.00",
+                total: "210.00"
+            },
+            {
+                id: "12",
+                invdate: "2007-10-02",
+                name: "test2",
+                note: "note2",
+                amount: "300.00",
+                tax: "20.00",
+                total: "320.00"
+            },
+            {
+                id: "13",
+                invdate: "2007-09-01",
+                name: "test3",
+                note: "note3",
+                amount: "400.00",
+                tax: "30.00",
+                total: "430.00"
+            },
+            {
+                id: "14",
+                invdate: "2007-10-04",
+                name: "test",
+                note: "note",
+                amount: "200.00",
+                tax: "10.00",
+                total: "210.00"
+            },
+            {
+                id: "15",
+                invdate: "2007-10-05",
+                name: "test2",
+                note: "note2",
+                amount: "300.00",
+                tax: "20.00",
+                total: "320.00"
+            },
+            {
+                id: "16",
+                invdate: "2007-09-06",
+                name: "test3",
+                note: "note3",
+                amount: "400.00",
+                tax: "30.00",
+                total: "430.00"
+            },
+            {
+                id: "17",
+                invdate: "2007-10-04",
+                name: "test",
+                note: "note",
+                amount: "200.00",
+                tax: "10.00",
+                total: "210.00"
+            },
+            {
+                id: "18",
+                invdate: "2007-10-03",
+                name: "test2",
+                note: "note2",
+                amount: "300.00",
+                tax: "20.00",
+                total: "320.00"
+            },
+            {
+                id: "19",
+                invdate: "2007-09-01",
+                name: "test3",
+                note: "note3",
+                amount: "400.00",
+                tax: "30.00",
+                total: "430.00"
+            },
+            {
+                id: "21",
+                invdate: "2007-10-01",
+                name: "test",
+                note: "note",
+                amount: "200.00",
+                tax: "10.00",
+                total: "210.00"
+            },
+            {
+                id: "22",
+                invdate: "2007-10-02",
+                name: "test2",
+                note: "note2",
+                amount: "300.00",
+                tax: "20.00",
+                total: "320.00"
+            },
+            {
+                id: "23",
+                invdate: "2007-09-01",
+                name: "test3",
+                note: "note3",
+                amount: "400.00",
+                tax: "30.00",
+                total: "430.00"
+            },
+            {
+                id: "24",
+                invdate: "2007-10-04",
+                name: "test",
+                note: "note",
+                amount: "200.00",
+                tax: "10.00",
+                total: "210.00"
+            },
+            {
+                id: "25",
+                invdate: "2007-10-05",
+                name: "test2",
+                note: "note2",
+                amount: "300.00",
+                tax: "20.00",
+                total: "320.00"
+            },
+            {
+                id: "26",
+                invdate: "2007-09-06",
+                name: "test3",
+                note: "note3",
+                amount: "400.00",
+                tax: "30.00",
+                total: "430.00"
+            },
+            {
+                id: "27",
+                invdate: "2007-10-04",
+                name: "test",
+                note: "note",
+                amount: "200.00",
+                tax: "10.00",
+                total: "210.00"
+            },
+            {
+                id: "28",
+                invdate: "2007-10-03",
+                name: "test2",
+                note: "note2",
+                amount: "300.00",
+                tax: "20.00",
+                total: "320.00"
+            },
+            {
+                id: "29",
+                invdate: "2007-09-01",
+                name: "test3",
+                note: "note3",
+                amount: "400.00",
+                tax: "30.00",
+                total: "430.00"
+            }
+        ];
+
+        // Configuration for jqGrid Example 1
+        $("#table_list_1").jqGrid({
+            data: mydata,
+            datatype: "local",
+            height: 250,
+            autowidth: true,
+            shrinkToFit: true,
+            rowNum: 14,
+            rowList: [10, 20, 30],
+            colNames: ['Inv No', 'Date', 'Client', 'Amount', 'Tax', 'Total', 'Notes'],
+            colModel: [
+                {name: 'id', index: 'id', width: 60, sorttype: "int"},
+                {name: 'invdate', index: 'invdate', width: 90, sorttype: "date", formatter: "date"},
+                {name: 'name', index: 'name', width: 100},
+                {name: 'amount', index: 'amount', width: 80, align: "right", sorttype: "float", formatter: "number"},
+                {name: 'tax', index: 'tax', width: 80, align: "right", sorttype: "float"},
+                {name: 'total', index: 'total', width: 80, align: "right", sorttype: "float"},
+                {name: 'note', index: 'note', width: 150, sortable: false}
+            ],
+            pager: "#pager_list_1",
+            viewrecords: true,
+            caption: "Example jqGrid 1",
+            hidegrid: false
+        });
+
+        // Configuration for jqGrid Example 2
+        $("#table_list_2").jqGrid({
+            data: mydata,
+            datatype: "local",
+            height: 450,
+            autowidth: true,
+            shrinkToFit: true,
+            rowNum: 20,
+            rowList: [10, 20, 30],
+            colNames: ['Inv No', 'Date', 'Client', 'Amount', 'Tax', 'Total', 'Notes'],
+            colModel: [
+                {name: 'id', index: 'id', editable: true, width: 60, sorttype: "int", search: true},
+                {name: 'invdate', index: 'invdate', editable: true, width: 90, sorttype: "date", formatter: "date"},
+                {name: 'name', index: 'name', editable: true, width: 100},
+                {
+                    name: 'amount',
+                    index: 'amount',
+                    editable: true,
+                    width: 80,
+                    align: "right",
+                    sorttype: "float",
+                    formatter: "number"
+                },
+                {name: 'tax', index: 'tax', editable: true, width: 80, align: "right", sorttype: "float"},
+                {name: 'total', index: 'total', editable: true, width: 80, align: "right", sorttype: "float"},
+                {name: 'note', index: 'note', editable: true, width: 100, sortable: false}
+            ],
+            pager: "#pager_list_2",
+            viewrecords: true,
+            caption: "Example jqGrid 2",
+            add: true,
+            edit: true,
+            addtext: 'Add',
+            edittext: 'Edit',
+            hidegrid: false
+        });
+
+        // Add selection
+        $("#table_list_2").setSelection(4, true);
+
+
+        // Setup buttons
+        $("#table_list_2").jqGrid('navGrid', '#pager_list_2',
+            {edit: true, add: true, del: true, search: true},
+            {height: 200, reloadAfterSubmit: true}
+        );
+
+        // Add responsive to jqGrid
+        $(window).bind('resize', function () {
+            var width = $('.jqGrid_wrapper').width();
+            $('#table_list_1').setGridWidth(width);
+            $('#table_list_2').setGridWidth(width);
+        });
+    });
+</script>
 </body>
 </html>

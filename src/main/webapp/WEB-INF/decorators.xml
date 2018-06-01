@@ -6,6 +6,6 @@
 
     <decorator name="test" page="test.jsp"/>
 
-    <decorator name="list-theme" page="list-theme.jsp"/>
+    <decorator name="theme" page="theme.jsp"/>
 
 </decorators>

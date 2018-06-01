@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="decorator" content="list-theme"/>
+    <meta name="decorator" content="theme"/>
 </head>
 <body>
 index content

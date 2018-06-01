@@ -20,8 +20,47 @@
     <!-- Gritter -->
     <link href="${staticPath}/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
 
+    <link href="${staticPath}/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
     <link href="${staticPath}/css/animate.css" rel="stylesheet">
     <link href="${staticPath}/css/style.css" rel="stylesheet">
+    <!-- Mainly scripts -->
+    <script src="${staticPath}/js/jquery-2.1.1.js"></script>
+    <script src="${staticPath}/js/bootstrap.min.js"></script>
+    <script src="${staticPath}/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="${staticPath}/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Flot -->
+    <script src="${staticPath}/js/plugins/flot/jquery.flot.js"></script>
+    <script src="${staticPath}/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="${staticPath}/js/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="${staticPath}/js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="${staticPath}/js/plugins/flot/jquery.flot.pie.js"></script>
+
+    <!-- Peity -->
+    <script src="${staticPath}/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="${staticPath}/js/demo/peity-demo.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="${staticPath}/js/inspinia.js"></script>
+    <script src="${staticPath}/js/plugins/pace/pace.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="${staticPath}/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- GITTER -->
+    <script src="${staticPath}/js/plugins/gritter/jquery.gritter.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="${staticPath}/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="${staticPath}/js/demo/sparkline-demo.js"></script>
+
+    <!-- ChartJS-->
+    <script src="${staticPath}/js/plugins/chartJs/Chart.min.js"></script>
+
+    <!-- Toastr -->
+    <script src="${staticPath}/js/plugins/toastr/toastr.min.js"></script>
 
     <sitemesh:head/>
 
@@ -54,7 +93,22 @@
                         IN+
                     </div>
                 </li>
-                <li class="active">
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-edit"></i>
+                        <span class="nav-label">系统管理</span><span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="/admin/sys/dict/index">字典管理</a></li>
+                        <li><a href="form_basic.html">菜单管理</a></li>
+                        <li><a href="form_advanced.html">用户管理</a></li>
+                        <li><a href="form_wizard.html">权限管理</a></li>
+                    </ul>
+                </li>
+
+
+                <li>
                     <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span> <span
                             class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
@@ -403,7 +457,10 @@
                 </ul>
             </nav>
         </div>
-
+        <div class="wrapper wrapper-content  animated fadeInRight">
+            <%--页面的内容--%>
+            <sitemesh:body/>
+        </div>
 
     </div>
 
@@ -791,59 +848,6 @@
 
     </div>
 </div>
-<!-- Mainly scripts -->
-<script src="${staticPath}/js/jquery-2.1.1.js"></script>
-<script src="${staticPath}/js/bootstrap.min.js"></script>
-<script src="${staticPath}/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-<script src="${staticPath}/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<!-- Flot -->
-<script src="${staticPath}/js/plugins/flot/jquery.flot.js"></script>
-<script src="${staticPath}/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-<script src="${staticPath}/js/plugins/flot/jquery.flot.spline.js"></script>
-<script src="${staticPath}/js/plugins/flot/jquery.flot.resize.js"></script>
-<script src="${staticPath}/js/plugins/flot/jquery.flot.pie.js"></script>
-
-<!-- Peity -->
-<script src="${staticPath}/js/plugins/peity/jquery.peity.min.js"></script>
-<script src="${staticPath}/js/demo/peity-demo.js"></script>
-
-<!-- Custom and plugin javascript -->
-<script src="${staticPath}/js/inspinia.js"></script>
-<script src="${staticPath}/js/plugins/pace/pace.min.js"></script>
-
-<!-- jQuery UI -->
-<script src="${staticPath}/js/plugins/jquery-ui/jquery-ui.min.js"></script>
-
-<!-- GITTER -->
-<script src="${staticPath}/js/plugins/gritter/jquery.gritter.min.js"></script>
-
-<!-- Sparkline -->
-<script src="${staticPath}/js/plugins/sparkline/jquery.sparkline.min.js"></script>
-
-<!-- Sparkline demo data  -->
-<script src="${staticPath}/js/demo/sparkline-demo.js"></script>
-
-<!-- ChartJS-->
-<script src="${staticPath}/js/plugins/chartJs/Chart.min.js"></script>
-
-<!-- Toastr -->
-<script src="${staticPath}/js/plugins/toastr/toastr.min.js"></script>
-
-
-<script>
-    $(document).ready(function () {
-        setTimeout(function () {
-            toastr.options = {
-                closeButton: true,
-                progressBar: true,
-                showMethod: 'slideDown',
-                timeOut: 4000
-            };
-            toastr.success('Responsive Admin Theme', 'Welcome to SongWeb');
-
-        }, 1300);
-    });
-</script>
 </body>
 </html>
