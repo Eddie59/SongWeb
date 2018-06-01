@@ -23,6 +23,20 @@
     </context:component-scan>
 
     <mvc:annotation-driven>
+
+        <mvc:message-converters>
+            <!--序列化与反序列化-->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value><!-- 顺序不要写反了，否则IE会出现下载提示 -->
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+
     </mvc:annotation-driven>
 
     <mvc:interceptors>

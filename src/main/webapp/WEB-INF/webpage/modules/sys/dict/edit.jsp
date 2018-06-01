@@ -4,6 +4,14 @@
 <head>
     <title>Title</title>
 
+    <script type="text/javascript" src="/static/vendors/jquery/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/vendors/jqgrid/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="/static/vendors/jqgrid/js/i18n/grid.locale-cn.js"></script>
+    <script type="text/javascript" src="/static/vendors/layer/layer.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/vendors/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/vendors/jqgrid/css/ui.jqgrid-bootstrap-ui.css"/>
+
     <script type="text/javascript" src="/static/common/js/curdtools_jqgrid.js"></script>
     <script type="text/javascript" src="/static/vendors/Validform_v5.3.2/js/Validform_v5.3.2.js"></script>
 
@@ -19,7 +27,9 @@
         }
 
         $(document).ready(function () {
+
             validateForm = $("#dictForm").Validform(
+                //Validform需要的配置信息
                 {
                     tiptype: function (msg, o, cssctl) {
                         if (!o.obj.is("form")) {
@@ -40,15 +50,18 @@
                         return true;
                     },
                     callback: function (result) {
+                        alert(result);
                         if (result.ret == 0) {
-                            top.layer.alert(result.msg, {icon: 0, title: '提示'});
+                            alert(result.ret);
+                            layer.alert(result.msg, {icon: 0, title: '提示'});
                             //运行回调
                             callFunc();
                         } else {
-                            top.layer.alert(result.msg, {icon: 0, title: '警告'});
+                            layer.alert(result.msg, {icon: 0, title: '警告'});
                         }
                     }
                 });
+
         });
     </script>
 </head>
