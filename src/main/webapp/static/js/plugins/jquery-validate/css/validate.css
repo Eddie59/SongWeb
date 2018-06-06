@@ -1,0 +1,21 @@
+﻿.has-success
+{
+}
+.has-success>input{
+    color:#18a689;
+}
+.has-success>em{
+    color:#18a689;
+}
+
+
+em.has-error
+{
+    color:red!important;
+}
+
+input.has-error
+{
+    color:red!important;
+    border:1px solid red!important;
+}

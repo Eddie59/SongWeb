@@ -20,9 +20,11 @@
     <!-- Gritter -->
     <link href="${staticPath}/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
 
-    <link href="${staticPath}/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
+<%--    <link href="${staticPath}/css/plugins/jQueryUI/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">--%>
     <link href="${staticPath}/css/animate.css" rel="stylesheet">
     <link href="${staticPath}/css/style.css" rel="stylesheet">
+
+
     <!-- Mainly scripts -->
     <script src="${staticPath}/js/jquery-2.1.1.js"></script>
     <script src="${staticPath}/js/bootstrap.min.js"></script>
@@ -61,6 +63,10 @@
 
     <!-- Toastr -->
     <script src="${staticPath}/js/plugins/toastr/toastr.min.js"></script>
+
+    <%--layer--%>
+    <link href="${staticPath}/js/plugins/layer/skin/layer.css" rel="stylesheet">
+    <script src="${staticPath}/js/plugins/layer/layer.min.js"></script>
 
     <sitemesh:head/>
 
@@ -457,9 +463,14 @@
                 </ul>
             </nav>
         </div>
+
         <div class="wrapper wrapper-content  animated fadeInRight">
-            <%--页面的内容--%>
-            <sitemesh:body/>
+            <div class="row">
+                <div class="col-lg-12">
+                    <%--页面的内容--%>
+                  <sitemesh:body/>
+                </div>
+            </div>
         </div>
 
     </div>

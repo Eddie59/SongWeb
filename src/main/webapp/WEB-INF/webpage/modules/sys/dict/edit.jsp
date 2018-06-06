@@ -1,114 +1,121 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page import="cn.modules.sys.entity.Dict" %>
+<%@ page import="cn.modules.sys.entity.DictGroup" %>
+<%@ page import="com.sun.tools.javac.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="/WEB-INF/webpage/taglibs.jspf" %>
+
 <html>
 <head>
-    <title>Title</title>
+    <title>添加字典</title>
+    <meta name="decorator" content="form"/>
+</head>
+<body>
+<form:form modelAttribute="data" class="form-horizontal">
+    <form:hidden path="id"/>
 
-    <script type="text/javascript" src="/static/vendors/jquery/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/vendors/jqgrid/js/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="/static/vendors/jqgrid/js/i18n/grid.locale-cn.js"></script>
-    <script type="text/javascript" src="/static/vendors/layer/layer.min.js"></script>
+    <div class="form-group"><label class="col-sm-2 control-label">标签</label>
+        <div class="col-sm-10">
+        <form:input path="label" placeholder="标签" class="form-control"/>
+        </div>
+    </div>
 
-    <link rel="stylesheet" type="text/css" href="/static/vendors/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/vendors/jqgrid/css/ui.jqgrid-bootstrap-ui.css"/>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group"><label class="col-sm-2 control-label">值</label>
+        <div class="col-sm-10">
+            <form:input path="value" placeholder="值" class="form-control"/>
+            <span class="help-block m-b-none">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+        </div>
+    </div>
 
-    <script type="text/javascript" src="/static/common/js/curdtools_jqgrid.js"></script>
-    <script type="text/javascript" src="/static/vendors/Validform_v5.3.2/js/Validform_v5.3.2.js"></script>
+    <div class="hr-line-dashed"></div>
+    <div class="form-group"><label class="col-sm-2 control-label">所属组</label>
+        <div class="col-sm-8">
+            <select name="gid">
+                <c:forEach items="${dictGroups}" var="item" varStatus="status">
+                    <c:choose>
+                        <%--待完善--%>
+                        <c:when test="${item.id==''}">
+                            <option value="${item.id}" selected>${item.name}</option>
+                        </c:when>
+                        <c:otherwise>
+                            <option value="${item.id}">${item.name}</option>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </select>
+        </div>
+    </div>
 
-    <script type="text/javascript">
-        //初始化表单
-        var validateForm;
-        var callFunc;
+    <div class="hr-line-dashed"></div>
+    <div class="form-group"><label class="col-sm-2 control-label">排序</label>
 
-        //回调函数，在编辑和保存动作时，供openDialog调用提交表单。
-        function doSubmit(func) {
-            callFunc = func;
-            validateForm.ajaxPost();
-        }
+        <div class="col-sm-10">
+            <form:input path="sort" placeholder="排序" class="form-control"/>
+        </div>
+    </div>
 
-        $(document).ready(function () {
+    <div class="hr-line-dashed"></div>
+    <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+        <div class="col-sm-10">
+            <form:textarea path="remarks" htmlEscape="false" rows="3" maxlength="200" class="form-control"  placeholder="备注"/>
+        </div>
+    </div>
 
-            validateForm = $("#dictForm").Validform(
-                //Validform需要的配置信息
-                {
-                    tiptype: function (msg, o, cssctl) {
-                        if (!o.obj.is("form")) {
-                            var objtip = o.obj.siblings(".Validform_checktip");
-                            cssctl(objtip, o.type);
-                            objtip.text(msg);
+    <div class="hr-line-dashed"></div>
+    <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-2">
+            <button class="btn btn-primary" type="submit">保存</button>
+            <button class="btn btn-white" type="button">取消</button>
+        </div>
+    </div>
+</form:form>
+
+<script type="text/javascript">
+    $(function () {
+        $('form').validate({
+            rules: {
+                label:"required",
+                value: "required",
+            },
+            messages: {
+                label:"标签不为空",
+                value: "值不为空",
+            },
+            errorElement: "em",
+            errorClass:"has-error",
+            success: function (label) {
+                label.parent().addClass("has-success");
+            },
+            error:function () {
+              alert("eoor")  ;
+            },
+            submitHandler: function (form) {
+                //提交form
+                $('form').ajaxSubmit({
+                    type:"post",
+                    url:"/admin/sys/dict/create",
+                    success: function (data) {
+//                        待完善
+                        alert(data);
+                        if (data.ret==0) {
+                            parent.layer.msg("保存成功");
+                            $(window.parent.document).find("#list").trigger("reloadGrid");
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
                         }
-                    },
-                    beforeSubmit: function (curform) {
-                        try {
-                            var beforeFunc = beforeSubmit;
-                            if (beforeFunc && typeof(beforeFunc) == "function") {
-                                return beforeFunc(curform);
-                            }
-                        } catch (err) {
-
-                        }
-                        return true;
-                    },
-                    callback: function (result) {
-                        alert(result);
-                        if (result.ret == 0) {
-                            alert(result.ret);
-                            layer.alert(result.msg, {icon: 0, title: '提示'});
-                            //运行回调
-                            callFunc();
-                        } else {
-                            layer.alert(result.msg, {icon: 0, title: '警告'});
+                        else {
+                            parent.layer.msg("保存失败");
                         }
                     }
                 });
-
+            },
+            invalidHandler: function () {
+                alert("invalidHandler")
+                return false;
+            }
         });
-    </script>
-</head>
-<body>
-<%
-    Dict dict = (Dict) request.getAttribute("data");
-%>
-
-<body class="white-bg" formid="dictForm">
-<form method="post" action="/admin/sys/dict/create" class="form-horizontal">
-
-    <input type="hidden" name="id" value="<%=dict.getId()%>"/>
-
-    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
-        <tbody>
-        <tr>
-            <td class="width-15 active text-right">
-                <label><font color="red">*</font>标签:</label>
-            </td>
-            <td class="width-35">
-                <input type="text" name="label" value="<%=dict.getLabel()%>"/>
-                <label class="Validform_checktip"></label>
-            </td>
-            <td class="width-15 active text-right"><label><font color="red">*</font>值:</label></td>
-            <td class="width-35">
-                <input type="text" name="value" value="<%=dict.getValue()%>"/>
-                <label class="Validform_checktip"></label>
-            </td>
-        </tr>
-        <tr>
-            <td class="width-15 active text-right">
-                <label><font color="red">*</font>排序:</label>
-            </td>
-            <td class="width-35">
-                <input type="text" name="sort" value="<%=dict.getSort()%>"/>
-                <label class="Validform_checktip"></label>
-            </td>
-            <td class="width-15 active text-right"><label><font color="red">*</font>备注:</label></td>
-            <td class="width-35" colspan="3">
-                <textarea name="" content="<%=dict.getRemarks()%>" cols="30" rows="10"></textarea>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <input type="submit" name="submit" value="提交"/>
-</form>
-</body>
-
+    });
+</script>
 </body>
 </html>

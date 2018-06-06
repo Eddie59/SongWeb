@@ -3,8 +3,8 @@ package cn.core.common.controller;
 import cn.core.common.entity.AbstractEntity;
 import cn.core.common.service.ICommonService;
 import cn.core.model.AjaxJson;
+import cn.core.query.data.Queryable;
 import cn.core.utils.StringUtil;
-import cn.modules.sys.entity.Dict;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +73,11 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public void list1(Model model, HttpServletRequest request, HttpServletResponse response) {
-        EntityWrapper wrapper = new EntityWrapper();
-        List<Dict> dicts = commonService.selectList(wrapper);
-        String json = JSON.toJSONString(dicts);
+    public void ajaxList( Model model, HttpServletRequest request, HttpServletResponse response) {
+        EntityWrapper ew = new EntityWrapper();
+
+        List<Entity> data = commonService.selectList(ew);
+        String json = JSON.toJSONString(data);
         StringUtil.printJson(response, json);
     }
 
@@ -153,7 +154,6 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
      * 添加、更新
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @ResponseBody
     public AjaxJson doSave(Entity entity, HttpServletRequest request, HttpServletResponse response, BindingResult result) {
         AjaxJson ajaxJson = new AjaxJson();
         ajaxJson.success("保存成功");

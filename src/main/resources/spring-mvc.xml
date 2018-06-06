@@ -23,10 +23,29 @@
     </context:component-scan>
 
     <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <bean class="cn.core.query.resolver.QueryMethodArgumentResolver"/>
 
+        </mvc:argument-resolvers>
         <mvc:message-converters>
             <!--序列化与反序列化-->
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+                <property name="supportedMediaTypes">
+                    <list>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="text" />
+                            <constructor-arg index="1" value="plain" />
+                            <constructor-arg index="2" value="UTF-8" />
+                        </bean>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="*" />
+                            <constructor-arg index="1" value="*" />
+                            <constructor-arg index="2" value="UTF-8" />
+                        </bean>
+                    </list>
+                </property>
+            </bean>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>

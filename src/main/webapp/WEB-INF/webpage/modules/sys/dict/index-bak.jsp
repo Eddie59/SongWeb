@@ -64,7 +64,6 @@
                     {
                         label: '标签',
                         name: 'label',
-                        width: 100,
                         align: 'left',
                         sortable: true,
                         checkbox: true,
@@ -75,6 +74,9 @@
                     {label: '排序', name: 'sort', index: 'sort'},
                     {label: '备注', name: 'remarks', index: 'remarks'}
                 ],
+                width:"100%",
+                shrinkToFit:false,
+                autowidth:false,
                 height: 250,
                 rowNum: 5,
                 rowList: [5, 10, 20, 30],
@@ -96,6 +98,12 @@
                 sortorder: "asc",
             });
             jQuery("#list").jqGrid('navGrid', '#pager2', {edit: true, add: true, del: true});
+        });
+        //表格宽度自适应
+        $(function(){
+            $(window).resize(function(){
+                $("#list").setGridWidth($(window).width());
+            });
         });
     </script>
 

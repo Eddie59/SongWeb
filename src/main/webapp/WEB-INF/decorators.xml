@@ -7,5 +7,5 @@
     <decorator name="test" page="test.jsp"/>
 
     <decorator name="theme" page="theme.jsp"/>
-
+    <decorator name="form" page="form.jsp"/>
 </decorators>
