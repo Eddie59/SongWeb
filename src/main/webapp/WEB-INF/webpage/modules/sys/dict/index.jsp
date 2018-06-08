@@ -19,8 +19,8 @@
             <div id="listQuery" class="col-sm-12">
                 <div class="form-inline">
                     <div class="form-group">
-                        <label class="control-label">标签：</label>
-                        <input type="text" placeholder="标签" name="label" condition="like" class="form-control" value="1">
+                        <label class="control-label">排序：</label>
+                        <input type="text" placeholder="排序" name="sort" condition="like" class="form-control" value="abc">
                     </div>
                     <div class="form-group">
                         <label class="control-label">值：</label>

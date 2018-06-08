@@ -1,8 +1,8 @@
 package cn.core.query.resolver;
 
 import cn.core.query.annotation.PageDefaults;
-import cn.core.query.data.PageImpl;
-import cn.core.query.data.Page;
+import cn.core.query.data.PageableImpl;
+import cn.core.query.data.Pageable;
 import cn.core.query.data.Sort;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
@@ -25,11 +25,11 @@ import java.util.Map;
  */
 public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
 
-    private static final Page DEFAULT_PAGE_REQUEST = new PageImpl(0, 10);
+    private static final Pageable DEFAULT_PAGE_REQUEST = new PageableImpl(0, 10);
     private static final String DEFAULT_PAGE_PREFIX = "page";
     private static final String DEFAULT_SORT_PREFIX = "sort";
 
-    private Page fallbackPagable = DEFAULT_PAGE_REQUEST;
+    private Pageable fallbackPagable = DEFAULT_PAGE_REQUEST;
     private String pagePrefix = DEFAULT_PAGE_PREFIX;
     private String sortPrefix = DEFAULT_SORT_PREFIX;
     private int minPageSize = 1;
@@ -44,7 +44,7 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         this.maxPageSize = maxPageSize;
     }
 
-    public void setFallbackPagable(Page fallbackPagable) {
+    public void setFallbackPagable(Pageable fallbackPagable) {
         this.fallbackPagable = null == fallbackPagable ? DEFAULT_PAGE_REQUEST : fallbackPagable;
     }
 
@@ -59,7 +59,7 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return Page.class.isAssignableFrom(parameter.getParameterType());
+        return Pageable.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Nullable
@@ -67,7 +67,7 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer, NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
         PageDefaults pageDefaults = getPageableDefaults(parameter);
         // 默认的page request
-        Page defaultPageRequest = getDefaultFromAnnotationOrFallback(pageDefaults);
+        Pageable defaultPageRequest = getDefaultFromAnnotationOrFallback(pageDefaults);
 
         String pageNamePrefix = getPagePrefix(parameter);
         String sortNamePrefix = getSortPrefix(parameter);
@@ -104,14 +104,14 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         }
         Sort sort = getSort(sortNamePrefix, sortMap, defaultPageRequest, webRequest);
         if (pageMap.size() == 0) {
-            return new PageImpl(defaultPageRequest.getPageNumber(), defaultPageRequest.getPageSize(),
+            return new PageableImpl(defaultPageRequest.getPageNumber(), defaultPageRequest.getPageSize(),
                     sort == null ? defaultPageRequest.getSort() : sort);
         }
 
         int pn = getPageNumber(pageMap, defaultPageRequest);
         int pageSize = getPageSize(pageMap, defaultPageRequest);
 
-        return new PageImpl(pn, pageSize, sort);
+        return new PageableImpl(pn, pageSize, sort);
     }
 
     private PageDefaults getPageableDefaults(MethodParameter parameter) {
@@ -122,15 +122,15 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         return pageDefaults;
     }
 
-    private Page getDefaultFromAnnotationOrFallback(PageDefaults pageDefaults) {
-        Page defaultPage = defaultPageable(pageDefaults);
+    private Pageable getDefaultFromAnnotationOrFallback(PageDefaults pageDefaults) {
+        Pageable defaultPage = defaultPageable(pageDefaults);
         if (defaultPage != null) {
             return defaultPage;
         }
         return fallbackPagable;
     }
 
-    private Page defaultPageable(PageDefaults pageDefaults) {
+    private Pageable defaultPageable(PageDefaults pageDefaults) {
         if (pageDefaults == null) {
             return null;
         }
@@ -151,7 +151,7 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
             }
         }
 
-        return new PageImpl(pageNumber, pageSize, sort);
+        return new PageableImpl(pageNumber, pageSize, sort);
     }
 
 
@@ -171,7 +171,7 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         return sortPrefix;
     }
 
-    private Sort getSort(String sortNamePrefix, Map<String, String[]> sortMap, Page defaultPageRequest,
+    private Sort getSort(String sortNamePrefix, Map<String, String[]> sortMap, Pageable defaultPageRequest,
                          NativeWebRequest webRequest) {
         Sort sort = null;
         try {
@@ -211,7 +211,7 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         return sort;
     }
 
-    private int getPageNumber(Map<String, String[]> pageMap, Page defaultPageRequest) {
+    private int getPageNumber(Map<String, String[]> pageMap, Pageable defaultPageRequest) {
         int number = 1;
         try {
             String numberStr = pageMap.get("pn")[0];
@@ -231,7 +231,7 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         return number;
     }
 
-    private int getPageSize(Map<String, String[]> pageMap, Page defaultPageRequest) {
+    private int getPageSize(Map<String, String[]> pageMap, Pageable defaultPageRequest) {
         int pageSize = 0;
         try {
             String pageSizeStr = pageMap.get("size")[0];

@@ -1,6 +1,6 @@
 package cn.core.query.data;
 
-public interface Page {
+public interface Pageable {
     /**
      * @return 当前第几页
      */
@@ -21,16 +21,16 @@ public interface Page {
     /**
      * @return 下一页 自身Pageable接口对象
      */
-    Page next();
+    Pageable next();
     /**
      * @return 上一页 自身Pageable接口对象
      */
-    Page previousOrFirst();
+    Pageable previousOrFirst();
 
     /**
      * @return 第一页 自身Pageable接口对象
      */
-    Page first();
+    Pageable first();
 
     /**
      * @return 是否有上一页

@@ -1,7 +1,7 @@
 package cn.core.query.resolver;
 
 import cn.core.query.annotation.QueryableDefaults;
-import cn.core.query.data.Page;
+import cn.core.query.data.Pageable;
 import cn.core.query.data.QueryableImpl;
 import cn.core.query.data.Queryable;
 import org.apache.commons.lang3.StringUtils;
@@ -87,7 +87,7 @@ public class QueryMethodArgumentResolver extends BaseMethodArgumentResolver {
 
 
         //处理分页及排序
-        Page page = (Page) pageMethodArgumentResolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
+        Pageable page = (Pageable) pageMethodArgumentResolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
         // 方法上没有QueryableDefaults注解，使用解析得到的的page
         if (queryDefaults == null) {
             queryRequest.setPage(page);

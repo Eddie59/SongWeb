@@ -5,6 +5,7 @@ import cn.core.common.service.ICommonService;
 import cn.core.model.AjaxJson;
 import cn.core.query.data.PropertyPreFilter;
 import cn.core.query.data.Queryable;
+import cn.core.query.utils.QueryableConvertUtils;
 import cn.core.utils.StringUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.lang3.StringUtils;
+import com.baomidou.mybatisplus.plugins.Page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,9 +78,9 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public void ajaxList(Queryable queryable, PropertyPreFilter propertyPreFilter, HttpServletRequest request, HttpServletResponse response) {
-
         EntityWrapper ew = new EntityWrapper();
-        com.baomidou.mybatisplus.plugins.Page data = commonService.list(queryable, ew);
+        QueryableConvertUtils.convertQueryValueToEntityValue(queryable,entityClass);
+        Page data = commonService.list(queryable, ew);
 
         SerializeFilter serializeFilter = propertyPreFilter.constructFilter(entityClass);
         String json = JSON.toJSONString(data, serializeFilter);

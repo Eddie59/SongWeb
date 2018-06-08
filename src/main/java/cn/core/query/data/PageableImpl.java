@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Administrator
  * @date
  */
-public class PageImpl implements Page, Serializable {
+public class PageableImpl implements Pageable, Serializable {
     private static final long serialVersionUID = 8280485938848398236L;
 
     /**
@@ -24,7 +24,7 @@ public class PageImpl implements Page, Serializable {
      */
     private final Sort sort;
 
-    public PageImpl(int page, int size, Sort sort) {
+    public PageableImpl(int page, int size, Sort sort) {
         if (page < 0) {
             throw new IllegalArgumentException("Page index must not be less than zero!");
         }
@@ -37,11 +37,11 @@ public class PageImpl implements Page, Serializable {
         this.sort = sort;
     }
 
-    public PageImpl(int page, int size, Sort.Direction direction, String... properties) {
+    public PageableImpl(int page, int size, Sort.Direction direction, String... properties) {
         this(page, size, new Sort(direction, properties));
     }
 
-    public PageImpl(int page, int size) {
+    public PageableImpl(int page, int size) {
         this(page, size, null);
     }
 
@@ -67,18 +67,18 @@ public class PageImpl implements Page, Serializable {
     }
 
     @Override
-    public Page next() {
-        return new PageImpl(page + 1, size, sort);
+    public Pageable next() {
+        return new PageableImpl(page + 1, size, sort);
     }
 
     @Override
-    public Page previousOrFirst() {
-        return hasPrevious() ? new PageImpl(page - 1, size, sort) : this;
+    public Pageable previousOrFirst() {
+        return hasPrevious() ? new PageableImpl(page - 1, size, sort) : this;
     }
 
     @Override
-    public Page first() {
-        return new PageImpl(0, size, sort);
+    public Pageable first() {
+        return new PageableImpl(0, size, sort);
     }
 
     @Override
@@ -92,10 +92,10 @@ public class PageImpl implements Page, Serializable {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof PageImpl)) {
+        if (!(obj instanceof PageableImpl)) {
             return false;
         }
-        PageImpl that = (PageImpl) obj;
+        PageableImpl that = (PageableImpl) obj;
         boolean pageEqual = this.page == that.page;
         boolean sizeEqual = this.size == that.size;
         boolean sortEqual = this.sort == null ? that.sort == null : this.sort.equals(that.sort);

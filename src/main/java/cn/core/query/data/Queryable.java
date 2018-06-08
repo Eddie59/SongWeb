@@ -10,9 +10,9 @@ public interface Queryable {
     /**
      * 分页
      */
-    Page getPage();
+    Pageable getPage();
 
-    void setPage(Page page);
+    void setPage(Pageable page);
 
 
     /**

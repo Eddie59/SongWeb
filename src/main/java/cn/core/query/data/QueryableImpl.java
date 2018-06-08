@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class QueryableImpl implements Queryable {
 
-    private Page page;
+    private Pageable page;
     private Sort sort;
     private Condition condition;
 
@@ -33,12 +33,12 @@ public class QueryableImpl implements Queryable {
 
 
     @Override
-    public Page getPage() {
+    public Pageable getPage() {
         return page;
     }
 
     @Override
-    public void setPage(Page page) {
+    public void setPage(Pageable page) {
         this.page = page;
     }
 

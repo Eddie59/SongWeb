@@ -18,8 +18,9 @@
     classpath:songweb.properties"/>
 
     <context:component-scan base-package="cn.modules.**.controller" use-default-filters="false">
-        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
-        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>
 
     <mvc:annotation-driven>
@@ -31,18 +32,18 @@
         <mvc:message-converters>
             <!--序列化与反序列化-->
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <constructor-arg value="UTF-8" />
+                <constructor-arg value="UTF-8"/>
                 <property name="supportedMediaTypes">
                     <list>
                         <bean class="org.springframework.http.MediaType">
-                            <constructor-arg index="0" value="text" />
-                            <constructor-arg index="1" value="plain" />
-                            <constructor-arg index="2" value="UTF-8" />
+                            <constructor-arg index="0" value="text"/>
+                            <constructor-arg index="1" value="plain"/>
+                            <constructor-arg index="2" value="UTF-8"/>
                         </bean>
                         <bean class="org.springframework.http.MediaType">
-                            <constructor-arg index="0" value="*" />
-                            <constructor-arg index="1" value="*" />
-                            <constructor-arg index="2" value="UTF-8" />
+                            <constructor-arg index="0" value="*"/>
+                            <constructor-arg index="1" value="*"/>
+                            <constructor-arg index="2" value="UTF-8"/>
                         </bean>
                     </list>
                 </property>
@@ -59,9 +60,22 @@
 
     </mvc:annotation-driven>
 
+
+    <!--注册conversionService类型转换器-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+            </set>
+        </property>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="cn.core.query.utils.QueryableConvertUtils.setConversionService"/>
+        <property name="arguments" ref="conversionService"/>
+    </bean>
+
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/**" />
+            <mvc:mapping path="/**"/>
             <bean class="cn.core.interceptor.AjaxInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
@@ -74,7 +88,7 @@
     </bean>
 
     <!-- 静态资源映射-->
-    <mvc:resources location="/static/" mapping="/static/**" />
-    <mvc:resources location="/upload/" mapping="/upload/**" />
+    <mvc:resources location="/static/" mapping="/static/**"/>
+    <mvc:resources location="/upload/" mapping="/upload/**"/>
 
 </beans>
