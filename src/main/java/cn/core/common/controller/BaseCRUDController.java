@@ -3,9 +3,11 @@ package cn.core.common.controller;
 import cn.core.common.entity.AbstractEntity;
 import cn.core.common.service.ICommonService;
 import cn.core.model.AjaxJson;
+import cn.core.query.data.PropertyPreFilter;
 import cn.core.query.data.Queryable;
 import cn.core.utils.StringUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -73,11 +75,13 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public void ajaxList( Model model, HttpServletRequest request, HttpServletResponse response) {
-        EntityWrapper ew = new EntityWrapper();
+    public void ajaxList(Queryable queryable, PropertyPreFilter propertyPreFilter, HttpServletRequest request, HttpServletResponse response) {
 
-        List<Entity> data = commonService.selectList(ew);
-        String json = JSON.toJSONString(data);
+        EntityWrapper ew = new EntityWrapper();
+        com.baomidou.mybatisplus.plugins.Page data = commonService.list(queryable, ew);
+
+        SerializeFilter serializeFilter = propertyPreFilter.constructFilter(entityClass);
+        String json = JSON.toJSONString(data, serializeFilter);
         StringUtil.printJson(response, json);
     }
 
@@ -107,7 +111,6 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
     }
 
 
-
     public String showUpdate(Entity entity, Model model, HttpServletRequest request, HttpServletResponse response) {
         return "";
     }
@@ -127,24 +130,21 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
     }
 
     /**
-     *
      * 添加
      */
     @RequestMapping(value = "create", method = RequestMethod.POST)
     @ResponseBody
     public AjaxJson create(Model model, @Validated @ModelAttribute("data") Entity entity, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
-        return doSave(entity,request,response,result);
+        return doSave(entity, request, response, result);
     }
 
     /**
-     *
      * 更新
      */
-    @RequestMapping(value = "{id}/update",method = RequestMethod.POST)
+    @RequestMapping(value = "{id}/update", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxJson update(Model model,@Validated @RequestAttribute("data") Entity entity,BindingResult result,HttpServletRequest request,HttpServletResponse response)
-    {
-        return doSave(entity,request,response,result);
+    public AjaxJson update(Model model, @Validated @RequestAttribute("data") Entity entity, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+        return doSave(entity, request, response, result);
     }
 
     public void preSave(Entity entity, HttpServletRequest request, HttpServletResponse response) {
@@ -186,18 +186,14 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
     }
 
 
-
-
-    @RequestMapping(value = "{id}/delete",method = RequestMethod.POST)
+    @RequestMapping(value = "{id}/delete", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxJson delete(@PathVariable ID id)
-    {
+    public AjaxJson delete(@PathVariable ID id) {
         AjaxJson ajaxJson = new AjaxJson();
         ajaxJson.success("删除成功");
         try {
             commonService.deleteById(id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             ajaxJson.fail("删除失败");
         }
@@ -205,16 +201,15 @@ public class BaseCRUDController<Entity extends AbstractEntity<ID>, ID extends Se
     }
 
 
-    @RequestMapping(value = "batch/delete",method = RequestMethod.POST)
+    @RequestMapping(value = "batch/delete", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxJson batchDelete(@RequestParam(value = "ids",required = false) ID[] ids ) {
+    public AjaxJson batchDelete(@RequestParam(value = "ids", required = false) ID[] ids) {
         AjaxJson ajaxJson = new AjaxJson();
         ajaxJson.success("删除成功");
         try {
-            List<ID> idList= java.util.Arrays.asList(ids);
+            List<ID> idList = java.util.Arrays.asList(ids);
             commonService.deleteBatchIds(idList);
-        } catch (Exception exp)
-        {
+        } catch (Exception exp) {
             exp.printStackTrace();
             ajaxJson.fail("删除失败");
         }

@@ -28,7 +28,6 @@ public class BaseBeanController<Entity extends Serializable>
     /**
      * 共享的验证规则 验证失败返回true
      *
-     * @param m
      * @param result
      * @return
      */
@@ -47,7 +46,7 @@ public class BaseBeanController<Entity extends Serializable>
             List<ObjectError> objectErrors = bindingResult.getAllErrors();
             for (ObjectError error : objectErrors) {
                 String msg = MessageUtils.getMessage(error.getCode(), error.getDefaultMessage(), error.getArguments());
-                if (!StringUtils.isNoneEmpty(msg)) {
+                if (StringUtils.isNoneEmpty(msg)) {
                     stringBuilder.append(msg);
                 }
             }

@@ -69,9 +69,9 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         // 默认的page request
         Page defaultPageRequest = getDefaultFromAnnotationOrFallback(pageDefaults);
 
-        String pageableNamePrefix = getPagePrefix(parameter);
+        String pageNamePrefix = getPagePrefix(parameter);
         String sortNamePrefix = getSortPrefix(parameter);
-        Map<String, String[]> pageableMap = getPrefixParameterMap(pageableNamePrefix, webRequest, true);
+        Map<String, String[]> pageMap = getPrefixParameterMap(pageNamePrefix, webRequest, true);
         Map<String, String[]> sortMap = getPrefixParameterMap(sortNamePrefix, webRequest, false);
         // 预处理排序,sort与order分开
         String gridtype = webRequest.getParameter("gridtype");
@@ -103,13 +103,13 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
             }
         }
         Sort sort = getSort(sortNamePrefix, sortMap, defaultPageRequest, webRequest);
-        if (pageableMap.size() == 0) {
+        if (pageMap.size() == 0) {
             return new PageImpl(defaultPageRequest.getPageNumber(), defaultPageRequest.getPageSize(),
                     sort == null ? defaultPageRequest.getSort() : sort);
         }
 
-        int pn = getPageNumber(pageableMap, defaultPageRequest);
-        int pageSize = getPageSize(pageableMap, defaultPageRequest);
+        int pn = getPageNumber(pageMap, defaultPageRequest);
+        int pageSize = getPageSize(pageMap, defaultPageRequest);
 
         return new PageImpl(pn, pageSize, sort);
     }
@@ -211,10 +211,10 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         return sort;
     }
 
-    private int getPageNumber(Map<String, String[]> pageableMap, Page defaultPageRequest) {
+    private int getPageNumber(Map<String, String[]> pageMap, Page defaultPageRequest) {
         int number = 1;
         try {
-            String numberStr = pageableMap.get("pn")[0];
+            String numberStr = pageMap.get("pn")[0];
             if (numberStr != null) {
                 number = Integer.valueOf(numberStr);
             } else {
@@ -231,10 +231,10 @@ public class PageableMethodArgumentResolver extends BaseMethodArgumentResolver {
         return number;
     }
 
-    private int getPageSize(Map<String, String[]> pageableMap, Page defaultPageRequest) {
+    private int getPageSize(Map<String, String[]> pageMap, Page defaultPageRequest) {
         int pageSize = 0;
         try {
-            String pageSizeStr = pageableMap.get("size")[0];
+            String pageSizeStr = pageMap.get("size")[0];
             if (pageSizeStr != null) {
                 pageSize = Integer.valueOf(pageSizeStr);
             } else {

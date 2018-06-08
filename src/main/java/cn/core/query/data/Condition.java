@@ -185,7 +185,7 @@ public class Condition implements Iterable<Condition.Filter>, Serializable {
          */
         public boolean isUnaryFilter() {
             String operatorStr = getOperator().getSymbol();
-            return !StringUtils.isNoneEmpty(operatorStr) && operatorStr.startsWith("is");
+            return StringUtils.isNoneEmpty(operatorStr) && operatorStr.startsWith("is");
         }
 
 

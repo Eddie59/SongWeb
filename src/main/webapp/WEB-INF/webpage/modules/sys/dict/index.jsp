@@ -20,11 +20,11 @@
                 <div class="form-inline">
                     <div class="form-group">
                         <label class="control-label">标签：</label>
-                        <input type="text" placeholder="标签" name="label" condition="like" class="form-control" value="abc">
+                        <input type="text" placeholder="标签" name="label" condition="like" class="form-control" value="1">
                     </div>
                     <div class="form-group">
                         <label class="control-label">值：</label>
-                        <input type="text" placeholder="值" name="value" condition="like" class="form-control" value="ddd">
+                        <input type="text" placeholder="值" name="value" condition="like" class="form-control" value="">
                     </div>
                 </div>
                 <br>
@@ -106,6 +106,7 @@
 
     var data={};
     data['gridtype']="jqgrid";
+    data['queryFields']="id,value,sort,remarks";
 
     $("#listQuery input[type='text']").each(function () {
         var name=$(this).attr("name");
@@ -117,7 +118,7 @@
     });
 
     var setting = {
-        url: '/admin/sys/dict/list2',
+        url: '/admin/sys/dict/list',
         datatype: "json",
         postData: data,//给后台传递参数
         prmNames: {//请求参数格式预处理

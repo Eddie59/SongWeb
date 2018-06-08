@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class QueryMethodArgumentResolver extends BaseMethodArgumentResolver {
     private static final PageableMethodArgumentResolver DEFAULT_PAGEABLE_RESOLVER = new PageableMethodArgumentResolver();
-    private PageableMethodArgumentResolver pageableMethodArgumentResolver = DEFAULT_PAGEABLE_RESOLVER;
+    private PageableMethodArgumentResolver pageMethodArgumentResolver = DEFAULT_PAGEABLE_RESOLVER;
 
     /**
      * 查询参数前缀
@@ -87,8 +87,8 @@ public class QueryMethodArgumentResolver extends BaseMethodArgumentResolver {
 
 
         //处理分页及排序
-        Page page = (Page) pageableMethodArgumentResolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
-        // 方法上没有QueryableDefaults注解，使用解析得到的的pageable
+        Page page = (Page) pageMethodArgumentResolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
+        // 方法上没有QueryableDefaults注解，使用解析得到的的page
         if (queryDefaults == null) {
             queryRequest.setPage(page);
         }

@@ -91,10 +91,6 @@ public class DictController extends BaseCRUDController<Dict, String> {
 
     @RequestMapping(value = "/list2", method = RequestMethod.GET)
     public void list2(Queryable queryable, Model model, HttpServletRequest request, HttpServletResponse response) {
-
-        String test1 = request.getParameter("test1");
-        String test2 = request.getParameter("test2");
-
         int rows = Integer.parseInt(request.getParameter("page.size"));
         int page = Integer.parseInt(request.getParameter("page.pn"));
         String sort = request.getParameter("sort");
