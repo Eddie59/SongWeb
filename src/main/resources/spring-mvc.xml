@@ -29,7 +29,7 @@
             <bean class="cn.core.query.resolver.PropertyPreFilterMethodArgumentResolver"/>
         </mvc:argument-resolvers>
 
-        <mvc:message-converters>
+        <mvc:message-converters  register-defaults="true">
             <!--序列化与反序列化-->
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8"/>

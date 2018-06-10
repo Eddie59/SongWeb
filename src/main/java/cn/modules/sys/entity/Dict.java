@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Dict class
  *
@@ -29,6 +31,7 @@ public class Dict  extends DataEntity<String> {
     private String value;
     /** 描述 */
     @TableField(value = "remarks")
+    @NotNull(message = "remarks is not null ")
     private String remarks;
     /** 排序 */
     @TableField(value = "sort")
