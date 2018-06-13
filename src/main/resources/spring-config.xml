@@ -14,11 +14,13 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-
-    <context:property-placeholder location="classpath:db.properties,classpath:config.properties,classpath:shiro.properties"/>
+    <context:property-placeholder location="
+        classpath:db.properties,
+        classpath:songweb.properties,
+        classpath:config.properties,
+        classpath:shiro.properties"/>
 
     <context:component-scan base-package="cn.modules.**.service.impl"/>
-
 
     <import resource="classpath:spring-config-mybatis.xml"/>
     <import resource="classpath:spring-config-cache.xml"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache name="songweb-mybatis">
 
-    <diskStore path="java.io.tmpdir" />
+    <diskStore path="E:\\ehcache" />
 
     <!-- 登录记录缓存 锁定10分钟 -->
     <cache name="passwordRetryCache" maxEntriesLocalHeap="2000"

@@ -1,5 +1,7 @@
 package cn.core.utils;
 
+import com.alibaba.fastjson.JSONObject;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
@@ -36,5 +38,20 @@ public class StringUtil {
             }
         }
         return true;
+    }
+
+
+    public static void printJson(HttpServletResponse response, Object content) {
+        try {
+            response.reset();
+            response.setContentType("application/json");
+            response.setHeader("Cache-Control", "no-store");
+            response.setCharacterEncoding("UTF-8");
+            PrintWriter pw = response.getWriter();
+            pw.write(JSONObject.toJSONString(content));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

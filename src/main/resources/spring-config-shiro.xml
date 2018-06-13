@@ -2,15 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="
-          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
 
     <bean id="shiroCacheManager" class="cn.core.security.shiro.cache.SpringCacheManagerWrapper">
-        <property name="cacheManager" ref="springCacheManager"/>
+        <!--<property name="cacheManager" ref="springCacheManager"/>-->
     </bean>
 
-    <bean id="credentialsMatcher" class="cn.modules.sys.security.shiro.web.filter.authc.credential.RetryLimitHashedCredentialsMatcher">
+    <bean id="credentialsMatcher"
+          class="cn.modules.sys.security.shiro.web.filter.authc.credential.RetryLimitHashedCredentialsMatcher">
+        <!--<property name="hashAlgorithmName" value="${shiro.credentials.hashAlgorithmName}" />-->
+        <!--<property name="hashIterations" value="${shiro.credentials.hashIterations}" />-->
+        <!--<property name="storedCredentialsHexEncoded" value="${shiro.credentials.storedCredentialsHexEncoded}" />-->
+        <property name="hashAlgorithmName" value="md5" />
+        <property name="hashIterations" value="2" />
+        <property name="storedCredentialsHexEncoded" value="true" />
     </bean>
 
 
@@ -23,7 +31,6 @@
     </bean>
 
 
-
     <!--默认的web环境的安全管理器-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="userRealm"/>
@@ -31,33 +38,49 @@
         <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
     </bean>
 
-    <bean class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+
+    <bean id="formAuthenticationFilter" class="cn.modules.sys.security.shiro.web.filter.authc.FormAuthenticationFilter">
+        <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="rememberMeParam" value="rememberMe"/>
+        <property name="successUrl" value="/"/>
+    </bean>
+
+    <!--id为shiroFilter是必须的-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="${shiro.login.url}"/>
-        <property name="unauthorizedUrl" value="${shiro.unauthorizedUrl}"/>
+        <!--<property name="loginUrl" value="${shiro.login.url}"/>-->
+        <!--<property name="unauthorizedUrl" value="${shiro.unauthorizedUrl}"/>-->
+        <property name="loginUrl" value="/admin/login"/>
+        <property name="unauthorizedUrl" value="/unauthorized"/>
         <property name="filters">
             <util:map>
+                <!--<entry key="onlineSession" value-ref=""/>-->
+                <entry key="formAuthenticationFilter" value-ref="formAuthenticationFilter"/>
             </util:map>
         </property>
         <property name="filterChainDefinitions">
             <value>
-                /static/** = anon
-                /jcaptcha* = anon
-                /upload/** = anon
-                /weixin/mp/front/** = anon
-                ${admin.url.prefix}/logout = logout
-                ${admin.url.prefix}/login  = jCaptchaValidate,authc
+                <!--/static/** = anon-->
+                <!--/jcaptcha* = anon-->
+                <!--/upload/** = anon-->
+                <!--/weixin/mp/front/** = anon-->
+                <!--${admin.url.prefix}/logout = logout-->
+                ${admin.url.prefix}/login = formAuthenticationFilter
                 <!--/** = sysUser,onlineSession,user,perms,roles-->
-                /** =onlineSession,user
+                <!--/** =onlineSession,user-->
+                /** =user
             </value>
         </property>
     </bean>
 
     <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager" />
-        <property name="arguments" ref="securityManager" />
+        <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+        <property name="arguments" ref="securityManager"/>
     </bean>
 
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+
 </beans>
