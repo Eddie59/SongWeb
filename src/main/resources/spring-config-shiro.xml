@@ -2,34 +2,41 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+          ">
 
-
-    <bean id="shiroCacheManager" class="cn.core.security.shiro.cache.SpringCacheManagerWrapper">
-        <!--<property name="cacheManager" ref="springCacheManager"/>-->
+    <bean id="shiroEncacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManager" ref="ehCacheManager"/>
+    </bean>
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+        <property name="shared" value="true"/>
     </bean>
 
-    <bean id="credentialsMatcher"
-          class="cn.modules.sys.security.shiro.web.filter.authc.credential.RetryLimitHashedCredentialsMatcher">
-        <!--<property name="hashAlgorithmName" value="${shiro.credentials.hashAlgorithmName}" />-->
-        <!--<property name="hashIterations" value="${shiro.credentials.hashIterations}" />-->
-        <!--<property name="storedCredentialsHexEncoded" value="${shiro.credentials.storedCredentialsHexEncoded}" />-->
+
+    <!--<bean id="shiroCacheManager" class="cn.core.security.shiro.cache.SpringCacheManagerWrapper">-->
+        <!--<property name="cacheManager" ref="springCacheManager"/>-->
+    <!--</bean>-->
+
+<!--<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">-->
+    <!--<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>-->
+<!--</bean>-->
+
+    <bean id="credentialsMatcher" class="cn.modules.sys.security.shiro.web.filter.authc.credential.RetryLimitHashedCredentialsMatcher">
+        <constructor-arg ref="shiroEncacheManager"/>
+        <property name="maxRetryCount" value="5" />
         <property name="hashAlgorithmName" value="md5" />
         <property name="hashIterations" value="2" />
         <property name="storedCredentialsHexEncoded" value="true" />
     </bean>
 
-
     <bean id="userRealm" class="cn.modules.sys.security.shiro.realm.UserRealm">
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
     </bean>
 
-
     <bean id="sessionManager" class="cn.core.security.shiro.session.SessionManager">
     </bean>
-
 
     <!--默认的web环境的安全管理器-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -37,7 +44,6 @@
         <property name="sessionManager" ref="sessionManager"/>
         <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
     </bean>
-
 
     <bean id="formAuthenticationFilter" class="cn.modules.sys.security.shiro.web.filter.authc.FormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
@@ -81,6 +87,5 @@
     </bean>
 
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
-
 
 </beans>

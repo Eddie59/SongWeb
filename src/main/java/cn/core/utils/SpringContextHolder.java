@@ -7,6 +7,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 /**
  * SpringContextHolder class
@@ -14,6 +16,7 @@ import org.springframework.context.ApplicationContextAware;
  * @author Administrator
  * @date
  */
+
 public class SpringContextHolder implements ApplicationContextAware,DisposableBean {
 
     private static Logger logger = LoggerFactory.getLogger(SpringContextHolder.class);

@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache name="songweb-mybatis">
 
-    <diskStore path="E:\\ehcache" />
+    <!-- 指定一个文件目录，当EhCache把数据写到硬盘上时，将把数据写到这个文件目录下 -->
+    <diskStore path="java.io.tmpdir"/>
+
+    <!-- 设定缓存的默认数据过期策略 -->
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            overflowToDisk="true"
+            timeToIdleSeconds="10"
+            timeToLiveSeconds="20"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"/>
 
     <!-- 登录记录缓存 锁定10分钟 -->
     <cache name="passwordRetryCache" maxEntriesLocalHeap="2000"

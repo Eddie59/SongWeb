@@ -1,5 +1,6 @@
 package cn.modules.sys.controller;
 
+import cn.modules.sys.utils.UserUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class IndexController {
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model, HttpServletRequest request, HttpServletResponse response)
     {
+        model.addAttribute("menu", UserUtils.getMenuList());
         return "modules/sys/index/index-";
     }
 

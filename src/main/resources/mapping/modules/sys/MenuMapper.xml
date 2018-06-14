@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.modules.sys.mapper.MenuMapper">
+    <!-- 查询父模块-->
+    <resultMap id="parentResult" type="Menu">
+        <id column="parent_id" property="id"/>
+        <result column="parent_name" property="name"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="Menu">
+        <!-- 树形基础模块 -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
+        <result column="parent_ids" property="parentIds" jdbcType="VARCHAR"/>
+        <result column="hasChildren" property="hasChildren"/>
+        <!-- 扩展模块 -->
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="permission" property="permission" jdbcType="VARCHAR"/>
+        <result column="isshow" property="isshow" jdbcType="BIT"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+        <result column="menu_icon" property="menuIcon" jdbcType="VARCHAR"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+        <!--关联-->
+        <association property="parent" resultMap="parentResult"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        -- 树形基础模块
+        t.id,
+        t.name,
+        t.parent_id,
+        t.parent_ids,
+        (select count(*) from sys_menu s
+        WHERE s.parent_id=t.id and s.isshow=1) as hasChildren,
+        -- 扩展模块
+        t.type,
+        t.url,
+        t.permission,
+        t.isshow,
+        t.sort,
+        t.menu_icon,
+        t.remarks,
+        -- 查询父模块
+        t.parent_id AS parent_id,
+        p.name AS parent_name,
+    </sql>
+    <sql id="parentJoins">
+        LEFT JOIN sys_menu p ON p.id = t.parent_id
+    </sql>
+
+
+    <select id="selectByTreeId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_menu t
+        WHERE t.id=#{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectTreeList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from sys_menu t
+        <include refid="parentJoins"/>
+        <where>
+            ${ew.sqlSegment}
+        </where>
+    </select>
+    <update id="updateSunTreeParentIds">
+        update sys_menu set parent_ids=
+        concat(#{newParentIds},substring(parent_ids, length(#{oldParentIds})+1,length(parent_ids)+1)))
+        WHERE parent_ids like concat(#{oldParentIds}, '%')
+    </update>
+    <delete id="deleteSunTree" parameterType="java.lang.String">
+        delete from sys_menu
+        where parent_ids like concat(#{oldParentIds},'%')
+    </delete>
+
+
+    <!-- 通过用户ID查询 -->
+    <select id="findMenuByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from sys_menu t
+        <include refid="parentJoins"/>
+        LEFT JOIN sys_role_menu rm on t.id=rm.menu_id
+        LEFT JOIN sys_user_role ur on rm.role_id=ur.role_id
+        WHERE ur.user_id= #{userId}
+        ORDER BY sort
+    </select>
+    <!-- 通过Ro查询 -->
+    <select id="findMenuByRoleId" resultMap="BaseResultMap">
+        SELECT DISTINCT
+        <include refid="Base_Column_List"/>
+        from sys_menu t
+        <include refid="parentJoins"/>
+        LEFT JOIN sys_role_menu rm on t.id=rm.menu_id
+        WHERE rm.role_id= #{roleId}
+        ORDER BY sort
+    </select>
+
+</mapper>

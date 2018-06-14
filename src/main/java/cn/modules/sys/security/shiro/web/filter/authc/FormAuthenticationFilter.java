@@ -37,6 +37,7 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
     private String messageSuccessParam = DEFAULT_MESSAGE_SUCCESS_PARAM;
     private String messageNormallParam = DEFAULT_MESSAGE_NORMAL_PARAM;
 
+
     @Override
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) {
         String username = getUsername(request);
