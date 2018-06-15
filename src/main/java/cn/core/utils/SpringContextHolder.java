@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
  * @date
  */
 
+@Service
+@Lazy(value = false)
 public class SpringContextHolder implements ApplicationContextAware,DisposableBean {
 
     private static Logger logger = LoggerFactory.getLogger(SpringContextHolder.class);

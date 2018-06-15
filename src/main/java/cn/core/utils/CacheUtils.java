@@ -12,9 +12,8 @@ import net.sf.ehcache.Element;
  */
 public class CacheUtils {
 
-    public static CacheManager cacheManager = (CacheManager) SpringContextHolder.getBean("shiroEncacheManager");
+    private static CacheManager cacheManager = ((CacheManager) SpringContextHolder.getBean("ehcacheManager"));
     private static final String SYS_CACHE = "sysCache";
-
     /**
      * @param cacheName
      * @return 如果ehcache中不存在名为cacheName的cache，向ehcache中添加cache，如果存在，返回
@@ -37,11 +36,27 @@ public class CacheUtils {
      */
     public static Object get(String cacheName, String key) {
         Element element = getCache(cacheName).get(key);
-        return element == null ? "" : element.getObjectValue();
+        return element == null ? null : element.getObjectValue();
     }
-    public static void put(String cacheName, String key,Object value)
-    {
-        Element element=new Element(key,value);
+
+    /**
+     * 写入SYS_CACHE缓存
+     *
+     * @param key
+     * @return
+     */
+    public static void put(String key, Object value) {
+        put(SYS_CACHE, key, value);
+    }
+    /**
+     * 写入缓存
+     *
+     * @param cacheName
+     * @param key
+     * @param value
+     */
+    public static void put(String cacheName, String key, Object value) {
+        Element element = new Element(key, value);
         getCache(cacheName).put(element);
     }
 }

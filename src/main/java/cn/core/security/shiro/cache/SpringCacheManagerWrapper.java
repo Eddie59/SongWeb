@@ -1,100 +1,108 @@
 package cn.core.security.shiro.cache;
 
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.lang.Nullable;
+import net.sf.ehcache.Ehcache;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheException;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.util.CollectionUtils;
+import org.springframework.cache.support.SimpleValueWrapper;
 
-import java.util.Collection;
-import java.util.concurrent.Callable;
+import java.util.*;
 
-/**
- * SpringCacheManagerWrapper class
- *
- * @author Administrator
- * @date
- */
+@SuppressWarnings({"rawtypes","unchecked"})
 public class SpringCacheManagerWrapper implements CacheManager {
 
-    private CacheManager cacheManager;
+    private org.springframework.cache.CacheManager cacheManager;
 
     /**
-     * @param cacheManager 注入SpringCacheManager
+     * 设置spring cache manager
+     *
+     * @param cacheManager
      */
-    public void setCacheManager(CacheManager cacheManager) {
+    public void setCacheManager(org.springframework.cache.CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 
-    @Nullable
     @Override
-    public Cache getCache(String name) {
-        Cache cache = cacheManager.getCache(name);
-        //SpringCacheWrapper实现了Cache接口
-        return new SpringCacheWrapper(cache);
+    public <K, V> Cache<K, V> getCache(String name) throws CacheException {
+        org.springframework.cache.Cache springCache = cacheManager.getCache(name);
+        return new SpringCacheWrapper(springCache);
     }
-
-    @Override
-    public Collection<String> getCacheNames() {
-        return cacheManager.getCacheNames();
-    }
-
 
     /**
-     * 实现Cache接口
+     * 实现Cache接口，实现Cache接口的方法
      */
-    class SpringCacheWrapper implements Cache {
-        private Cache cache;
+    static class SpringCacheWrapper implements Cache {
+        private org.springframework.cache.Cache springCache;
 
-        public SpringCacheWrapper(Cache cache) {
-            this.cache = cache;
+        SpringCacheWrapper(org.springframework.cache.Cache springCache) {
+            this.springCache = springCache;
         }
 
         @Override
-        public String getName() {
-            return cache.getName();
+        public Object get(Object key) throws CacheException {
+            Object value = springCache.get(key);
+            if (value instanceof SimpleValueWrapper) {
+                return ((SimpleValueWrapper) value).get();
+            }
+            return value;
         }
 
         @Override
-        public Object getNativeCache() {
-            return cache.getNativeCache();
-        }
-
-        @Nullable
-        @Override
-        public ValueWrapper get(Object key) {
-            return cache.get(key);
-        }
-
-        @Nullable
-        @Override
-        public <T> T get(Object key, @Nullable Class<T> type) {
-            return cache.get(key, type);
-        }
-
-        @Nullable
-        @Override
-        public <T> T get(Object key, Callable<T> valueLoader) {
-            return cache.get(key, valueLoader);
+        public Object put(Object key, Object value) throws CacheException {
+            springCache.put(key, value);
+            return value;
         }
 
         @Override
-        public void put(Object key, @Nullable Object value) {
-            cache.put(key, value);
-        }
-
-        @Nullable
-        @Override
-        public ValueWrapper putIfAbsent(Object key, @Nullable Object value) {
+        public Object remove(Object key) throws CacheException {
+            springCache.evict(key);
             return null;
         }
 
         @Override
-        public void evict(Object key) {
-            cache.evict(key);
+        public void clear() throws CacheException {
+            springCache.clear();
         }
 
         @Override
-        public void clear() {
-            cache.clear();
+        public int size() {
+            if (springCache.getNativeCache() instanceof Ehcache) {
+                Ehcache ehcache = (Ehcache) springCache.getNativeCache();
+                return ehcache.getSize();
+            }
+            throw new UnsupportedOperationException("invoke spring cache abstract size method not supported");
+        }
+
+
+        @Override
+        public Set keys() {
+            if (springCache.getNativeCache() instanceof Ehcache) {
+                Ehcache ehcache = (Ehcache) springCache.getNativeCache();
+                return new HashSet(ehcache.getKeys());
+            }
+            throw new UnsupportedOperationException("invoke spring cache abstract keys method not supported");
+        }
+
+        @Override
+        public Collection values() {
+            if (springCache.getNativeCache() instanceof Ehcache) {
+                Ehcache ehcache = (Ehcache) springCache.getNativeCache();
+                List keys = ehcache.getKeys();
+                if (!CollectionUtils.isEmpty(keys)) {
+                    List values = new ArrayList(keys.size());
+                    for (Object key : keys) {
+                        Object value = get(key);
+                        if (value != null) {
+                            values.add(value);
+                        }
+                    }
+                    return Collections.unmodifiableList(values);
+                } else {
+                    return Collections.emptyList();
+                }
+            }
+            throw new UnsupportedOperationException("invoke spring cache abstract values method not supported");
         }
     }
 }

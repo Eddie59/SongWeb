@@ -6,25 +6,21 @@
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
           ">
 
-    <bean id="shiroEncacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+<!--    <bean id="shiroEncacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManager" ref="ehCacheManager"/>
     </bean>
     <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="classpath:ehcache.xml"/>
         <property name="shared" value="true"/>
+    </bean>-->
+
+    <bean id="shiroCacheManager" class="cn.core.security.shiro.cache.SpringCacheManagerWrapper">
+        <property name="cacheManager" ref="springCacheManager" />
     </bean>
 
 
-    <!--<bean id="shiroCacheManager" class="cn.core.security.shiro.cache.SpringCacheManagerWrapper">-->
-        <!--<property name="cacheManager" ref="springCacheManager"/>-->
-    <!--</bean>-->
-
-<!--<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">-->
-    <!--<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>-->
-<!--</bean>-->
-
     <bean id="credentialsMatcher" class="cn.modules.sys.security.shiro.web.filter.authc.credential.RetryLimitHashedCredentialsMatcher">
-        <constructor-arg ref="shiroEncacheManager"/>
+        <constructor-arg ref="shiroCacheManager"/>
         <property name="maxRetryCount" value="5" />
         <property name="hashAlgorithmName" value="md5" />
         <property name="hashIterations" value="2" />
@@ -49,7 +45,7 @@
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
         <property name="rememberMeParam" value="rememberMe"/>
-        <property name="successUrl" value="/"/>
+        <!--<property name="successUrl" value="/"/>-->
     </bean>
 
     <!--id为shiroFilter是必须的-->
@@ -59,6 +55,7 @@
         <!--<property name="unauthorizedUrl" value="${shiro.unauthorizedUrl}"/>-->
         <property name="loginUrl" value="/admin/login"/>
         <property name="unauthorizedUrl" value="/unauthorized"/>
+        <property name="successUrl" value="/admin"/>
         <property name="filters">
             <util:map>
                 <!--<entry key="onlineSession" value-ref=""/>-->

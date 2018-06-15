@@ -32,11 +32,6 @@ import java.util.List;
 @RequestMapping("${admin.url.prefix}/sys/dict")
 public class DictController extends BaseCRUDController<Dict, String> {
 
-    @RequestMapping("/index")
-    public String index() {
-        return display("index");
-    }
-
     private IDictService service;
     private IDictGroupService dictGroupService;
 

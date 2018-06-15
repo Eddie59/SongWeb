@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * UserUtils class
  * 用户信息缓存在Ehcache中，用户的菜单缓存到Session中
+ *
  * @author Administrator
  * @date
  */
@@ -37,11 +38,14 @@ public class UserUtils {
      * @return 如果ehcache中有值，返回，如果没有，从数据库中找到user，put到ehcache
      */
     public static User get(String id) {
-        User user = (User) CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + id);
-        if (user == null) {
+        User user;
+        Object obj = CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + id);
+        if (obj == null) {
             user = userService.selectById(id);
             CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + id, user);
             CacheUtils.put(USER_CACHE, USER_CACHE_USER_NAME_ + user.getUsername(), user);
+        } else {
+            user = (User) obj;
         }
         return user;
     }
@@ -87,6 +91,7 @@ public class UserUtils {
         }
         return menus;
     }
+
 
 
     /* Start Session*/

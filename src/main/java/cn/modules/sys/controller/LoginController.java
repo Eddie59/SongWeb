@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date
  */
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("${admin.url.prefix}")
 public class LoginController extends BaseController {
 
     public LoginController() {

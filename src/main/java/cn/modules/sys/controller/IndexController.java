@@ -23,7 +23,7 @@ public class IndexController {
     public String index(Model model, HttpServletRequest request, HttpServletResponse response)
     {
         model.addAttribute("menu", UserUtils.getMenuList());
-        return "modules/sys/index/index-";
+        return "modules/sys/dict/list";
     }
 
 }

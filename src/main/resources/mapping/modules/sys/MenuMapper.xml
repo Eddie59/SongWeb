@@ -27,14 +27,14 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        -- 树形基础模块
+
         t.id,
         t.name,
         t.parent_id,
         t.parent_ids,
         (select count(*) from sys_menu s
         WHERE s.parent_id=t.id and s.isshow=1) as hasChildren,
-        -- 扩展模块
+
         t.type,
         t.url,
         t.permission,
@@ -42,9 +42,9 @@
         t.sort,
         t.menu_icon,
         t.remarks,
-        -- 查询父模块
+
         t.parent_id AS parent_id,
-        p.name AS parent_name,
+        p.name AS parent_name
     </sql>
     <sql id="parentJoins">
         LEFT JOIN sys_menu p ON p.id = t.parent_id

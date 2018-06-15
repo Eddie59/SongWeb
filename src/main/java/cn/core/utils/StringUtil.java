@@ -1,6 +1,8 @@
 package cn.core.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -11,6 +13,8 @@ import java.io.PrintWriter;
  * @author Administrator
  * @date
  */
+@Service
+@Lazy(value = false)
 public class StringUtil {
 
     public static void printJson(HttpServletResponse response, String json) {

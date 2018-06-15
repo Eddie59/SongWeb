@@ -73,11 +73,11 @@
 </head>
 <body>
 
-
 <div id="wrapper">
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav metismenu" id="side-menu">
+
                 <li class="nav-header">
                     <div class="dropdown profile-element"> <span>
                             <img alt="image" class="img-circle" src="img/profile_small.jpg"/>
@@ -100,13 +100,15 @@
                     </div>
                 </li>
 
+                <%@include file="menu.jsp"%>
+
                 <li>
                     <a href="#">
                         <i class="fa fa-edit"></i>
                         <span class="nav-label">系统管理</span><span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="/admin/sys/dict/index">字典管理</a></li>
+                        <li><a href="/admin/sys/dict">字典管理</a></li>
                         <li><a href="form_basic.html">菜单管理</a></li>
                         <li><a href="form_advanced.html">用户管理</a></li>
                         <li><a href="form_wizard.html">权限管理</a></li>
