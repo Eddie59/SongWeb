@@ -1,18 +1,22 @@
 package cn.modules.sys.utils;
 
 import cn.core.utils.CacheUtils;
+import cn.core.utils.ServletUtils;
 import cn.core.utils.SpringContextHolder;
+import cn.core.utils.StringUtil;
 import cn.modules.sys.entity.Menu;
 import cn.modules.sys.entity.User;
 import cn.modules.sys.service.IMenuService;
 import cn.modules.sys.service.IUserService;
 import cn.modules.sys.security.shiro.realm.UserRealm.Principal;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.session.Session;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -92,7 +96,28 @@ public class UserUtils {
         return menus;
     }
 
+    public static Menu getCurrentMenu() {
+        String url = ServletUtils.getRequest().getServletPath();
+        if (url.endsWith(".jsp")) {
+            return null;
+        }
 
+        url = url.replace("/admin", "");
+        url = StringUtil.trimFirstAndLastChar(url, '/');
+        if (StringUtils.isEmpty(url)) {
+            return null;
+        }
+        Menu menu = getCurrentMenu(getMenuList(), url);
+        System.out.println(url);
+        return menu;
+    }
+
+    private static Menu getCurrentMenu(List<Menu> menuList, String url) {
+        return menuList.stream()
+                .filter((x) -> x.getUrl().trim().toLowerCase().equals(url.trim().toLowerCase()))
+                .findFirst()
+                .get();
+    }
 
     /* Start Session*/
 

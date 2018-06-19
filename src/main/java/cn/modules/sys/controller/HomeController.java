@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("${admin.url.prefix}")
-public class IndexController {
+public class HomeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model, HttpServletRequest request, HttpServletResponse response)
     {
         model.addAttribute("menu", UserUtils.getMenuList());
-        return "modules/sys/dict/list";
+        return "modules/sys/home/index";
     }
 
 }

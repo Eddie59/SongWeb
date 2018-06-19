@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+        version="2.0">
+
+    <description>Function Library</description>
+    <tlib-version>3.0</tlib-version>
+    <short-name>fns</short-name>
+    <uri>/tags/songweb-functions</uri>
+
+    <function>
+        <description>获取当前登陆用户</description>
+        <name>getUser</name>
+        <function-class>cn.modules.sys.utils.UserUtils</function-class>
+        <function-signature>cn.modules.sys.entity.User getUser()</function-signature>
+        <example>${fns:getUser()}</example>
+    </function>
+
+    <function>
+        <description>获取当前登陆用户菜单</description>
+        <name>getMenuList</name>
+        <function-class>cn.modules.sys.utils.UserUtils</function-class>
+        <function-signature>java.util.List getMenuList()</function-signature>
+        <example>${fns:getMenuList()}</example>
+    </function>
+
+    <function>
+        <description>获取当前地址</description>
+        <name>getCurrentMenu</name>
+        <function-class>cn.modules.sys.utils.UserUtils</function-class>
+        <function-signature>cn.modules.sys.entity.Menu getCurrentMenu()</function-signature>
+        <example>${fns:getCurrentMenu()}</example>
+    </function>
+
+
+
+</taglib>

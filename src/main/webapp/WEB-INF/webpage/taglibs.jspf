@@ -5,6 +5,10 @@
 <%--spring--%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+
+<%@taglib prefix="fns" uri="/tags/songweb-functions" %>
+
+
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="appPath" value="${pageContext.request.contextPath}"/>
 <c:set var="staticPath" value="${pageContext.request.contextPath}/static"/>

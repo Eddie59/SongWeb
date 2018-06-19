@@ -58,4 +58,11 @@ public class StringUtil {
             e.printStackTrace();
         }
     }
+
+    public static String trimFirstAndLastChar(String source,char element)
+    {
+       int begin=  source.indexOf(element)==0?1:0;
+       int end=source.indexOf(element)+1==source.length()?source.lastIndexOf(element):source.length();
+       return source.substring(begin,end);
+    }
 }
