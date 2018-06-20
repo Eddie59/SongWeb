@@ -2,6 +2,7 @@
 
 <c:set var="menus" value="${fns:getMenuList()}"/>
 <c:set var="currentMenu" value="${fns:getCurrentMenu()}"/>
+<c:set var="curParentIds" value="${currentMenu.parentIds}"/>
 
 <div class="row border-bottom">
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">

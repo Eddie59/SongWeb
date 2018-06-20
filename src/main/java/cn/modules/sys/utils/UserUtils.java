@@ -18,6 +18,7 @@ import org.apache.shiro.session.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -108,15 +109,19 @@ public class UserUtils {
             return null;
         }
         Menu menu = getCurrentMenu(getMenuList(), url);
-        System.out.println(url);
         return menu;
     }
 
     private static Menu getCurrentMenu(List<Menu> menuList, String url) {
-        return menuList.stream()
+
+        Optional<Menu> optional = menuList.stream()
                 .filter((x) -> x.getUrl().trim().toLowerCase().equals(url.trim().toLowerCase()))
-                .findFirst()
-                .get();
+                .findFirst();
+
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        return null;
     }
 
     /* Start Session*/
