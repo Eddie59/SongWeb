@@ -34,5 +34,11 @@
     </function>
 
 
-
+    <function>
+        <description>获取url前缀</description>
+        <name>getAdminUrlPrefix</name>
+        <function-class>cn.modules.sys.tags.SysFunctions</function-class>
+        <function-signature>java.lang.String getAdminUrlPrefix()</function-signature>
+        <example>${fns:getAdminUrlPrefix()}</example>
+    </function>
 </taglib>
